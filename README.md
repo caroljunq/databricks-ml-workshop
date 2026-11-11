@@ -10,15 +10,16 @@ Demonstrar o fluxo atual recomendado:
 2. Feature Engineering in UC (`FeatureEngineeringClient`)  
 3. Treino com MLflow 3 + Models in UC  
 4. Promoção **Challenger → Champion** com gate de métrica  
-5. Model Serving + invocação  
-6. Próximos passos de monitoramento (inference tables, jobs, DABs)
+5. Model Serving com **features no payload** (método A — fluxo principal)  
+6. (Opcional) Online Feature Store + lookup automático com `cust_id`  
+7. (Opcional) Model-inside-model  
 
 ## Como usar
 
 1. Abra `notebook_guia_workshop.ipynb`
 2. Preencha as variáveis no topo (`CATALOGO`, `SCHEMA`, `PREFIXO`, `CAMINHO_DADOS`)
-3. Execute os módulos na ordem
-4. Deixe a seção **Opcional** (model-inside-model) para o final
+3. Execute os módulos 1–6 na ordem (fluxo principal)
+4. Opcionais só no final (ou pré-executados)
 
 ### Variáveis sugeridas (FEVM Carolina)
 
@@ -27,6 +28,10 @@ CATALOGO = "workspace_carolina_ferreira_catalog"
 SCHEMA = "ml_workshop"
 PREFIXO = "ws_"
 CAMINHO_DADOS = "/Volumes/workspace_carolina_ferreira_catalog/ml_workshop/dados"
+
+RUN_SERVING = True            # método A
+RUN_OPTIONAL_ONLINE = False   # online store + lookup
+RUN_OPTIONAL = False          # model-inside-model
 ```
 
 ## Agenda 1h30
@@ -37,8 +42,17 @@ CAMINHO_DADOS = "/Volumes/workspace_carolina_ferreira_catalog/ml_workshop/dados"
 | 0:10–0:25 | Módulos 1–2 (dados + features) — ideal pré-executado |
 | 0:25–0:45 | Módulo 3 (treino + Challenger) |
 | 0:45–1:00 | Módulo 4 (promoção Champion) |
-| 1:00–1:20 | Módulo 5 (serving) — endpoint pré-criado |
-| 1:20–1:30 | Módulo 6 + Q&A / opcional |
+| 1:00–1:20 | Módulo 5 (serving método A) — endpoint pré-criado |
+| 1:20–1:30 | Módulo 6 + Q&A / mencionar Opcional A |
+
+## Método A vs lookup automático
+
+| | Principal (A) | Opcional A |
+|---|---|---|
+| Payload | todas as features | só `cust_id` |
+| Online store | não precisa | obrigatório |
+| Cabe ao vivo em 1h30 | sim | melhor pré-executar |
+| Storytelling | honesto e estável | caminho de produção |
 
 ## Estrutura do repositório
 
@@ -48,19 +62,13 @@ dados/                         # CSVs do caso de crédito
 README.md
 ```
 
-## Stack atual
+## Stack
 
 | Camada | Tecnologia |
 |---|---|
 | Dados | Delta + Unity Catalog |
 | Features | Feature Engineering in UC |
 | Tracking / registry | MLflow 3 + Models in UC |
-| Serving | Mosaic AI Model Serving |
+| Serving (principal) | Mosaic AI Model Serving + features no payload |
+| Serving (opcional) | Online Feature Store + automatic feature lookup |
 | MLOps no workshop | aliases Challenger/Champion + gate de AUC |
-
-## Fora de escopo (próximos passos)
-
-- Online Feature Store + automatic feature lookup  
-- Lakeflow Jobs de retreino  
-- Databricks Asset Bundles (DABs) / CI/CD  
-- Data Profiling contínuo em produção  
