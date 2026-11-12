@@ -1,6 +1,6 @@
 # databricks-ml-workshop
 
-Workshop intermediário de **Machine Learning + MLOps** no Databricks, em um único notebook, com caso de **risco de crédito**.
+Workshop de **Machine Learning na Databricks** com MLOps, em um único notebook, com caso de **risco de crédito**.
 
 ## Propósito
 
@@ -13,12 +13,18 @@ Demonstrar o fluxo atual recomendado:
 5. Model Serving com **features no payload**  
 6. (Opcional) Model-inside-model  
 
+O notebook também traz, como referência e sem execução, o diagrama de **feature lookup automático** (endpoint recebe só `cust_id` e busca as features no Online Feature Store).
+
 ## Como usar
 
-1. Abra `notebook_guia_workshop.ipynb`
-2. Preencha as variáveis no topo (`CATALOGO`, `SCHEMA`, `PREFIXO`, `CAMINHO_DADOS`)
-3. Execute os módulos 1–6 na ordem (fluxo principal)
-4. Opcional só no final (ou pré-executado)
+1. Crie o schema de destino no Unity Catalog antes de rodar (o notebook não cria o schema).
+2. Abra `notebook_guia_workshop.ipynb`.
+3. Execute a primeira célula de código (`%pip install` + `restartPython`).
+4. Preencha as variáveis na célula de configuração (`CATALOGO`, `SCHEMA`, `PREFIXO`, `CAMINHO_DADOS`) e execute-a. O restart do Python apaga variáveis, então rode a configuração depois da instalação.
+5. Execute os módulos 1–6 na ordem (fluxo principal).
+6. O opcional fica no final e só deve ser executado se sobrar tempo.
+
+> Se a sessão expirar durante a provisão do endpoint, rode de novo a configuração e o Módulo 1 antes de invocar o endpoint.
 
 ### Variáveis sugeridas (FEVM Carolina)
 
@@ -46,9 +52,9 @@ RUN_OPTIONAL = False          # model-inside-model
 ## Estrutura do repositório
 
 ```text
-notebook_guia_workshop.ipynb   # guia único
-assets/                        # diagramas
-dados/                         # CSVs do caso de crédito
+notebook_guia_workshop.ipynb   # guia único (todos os módulos e o opcional)
+assets/                        # diagramas (arquitetura do workshop e feature lookup automático)
+dados/                         # CSVs do caso de crédito (credit_bureau_gold, customer_gold, fund_trans_gold, telco_gold e credit_decisioning_features)
 README.md
 ```
 
@@ -61,3 +67,4 @@ README.md
 | Tracking / registry | MLflow 3 + Models in UC |
 | Serving | Mosaic AI Model Serving + features no payload |
 | MLOps no workshop | aliases Challenger/Champion + gate de AUC |
+| Referência (não executada) | Online Feature Store + lookup automático por `cust_id` |
